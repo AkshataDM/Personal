@@ -1,0 +1,356 @@
+
+#include<conio.h>
+#include<iostream.h>
+
+
+class intpow
+{
+float L,A,N,mep,area,width,spring,IP,x,dc,mecheff,brakepower,torque,rad,wt;
+int ch,s,flag,post,z,cal,mark;
+    public:
+
+
+
+    void getdata1()
+    {
+    flag=0;
+    mark=0;
+    cout<<"\nEnter your choice\n";
+    cout<<"1.Two stroke engine\n2.Four stroke engine"<<endl;
+    cin>>s;
+    cout<< "Enter the number of rotations per minute or engine speed(rpm)\t";
+    cin>>N;
+    cout<<"Enter your choice\n 1.Area of cross section of cylinder\n2.Calculate area of cross section by cylinder diameter\n";
+    cin>>cal;
+    if(cal==2)
+    {
+      cout<<"\nEnter the diameter of the cylinder(meter)\t";
+      cin>>dc;
+      mark=1;
+    }
+    else
+    {
+      cout<<"\nEnter the area of cross section of cylinder\t";
+      cin>>A;
+
+    }
+
+    cout<<"Enter the length of stroke(meter)\t";
+    cin>>L;
+    cout<<"\nEnter your choice\n";
+    cout<<"1. Enter the mean effective pressure directly"<<endl;
+    cout<<"2. Calculate the mean effective pressure"<<endl;
+    cin>>ch;
+    if(ch==1)
+    { cout<<"\n Enter the mean effective pressure(bar)\t";
+		cin>>mep;
+
+		}
+    else
+    {
+     cout<<"\n Enter the area of the actual indicator diagram(meter squared)";
+		cout<<"\t";
+		cin>>area;
+		cout<<endl;
+
+		cout<<"Enter the spring value of the spring used in the indicator(bar/m)";
+		cout<<"\t";
+		cin>>spring;
+		cout<<endl;
+
+		cout<<"Enter the base width of indicator diagram(m)";
+		cout<<"\t";
+		cin>>width;
+		cout<<endl;
+		flag=1;
+
+
+	}
+	cout<<"Enter the number of cylinders\t";
+	cin>>x;
+      }
+    void calc1()
+    {
+    if(mark==1)
+      {
+	A=(3.14*dc*dc)/4;
+      }
+	if(flag==1)
+	{
+	  mep=(spring*area)/width;
+	}
+
+	 IP =x*100*(mep*L*A*N)/(60*s);
+     }
+    void putdata1()
+    {
+
+   cout<<"\nThe indicated power is\t"<<IP<<"kW\n";
+
+    }
+void getspecial()
+{
+flag=0;
+post=0;
+
+cout<<"\nCalculation of brake power and mean effective pressure given other parameters\n";
+cout<<"\nEnter your choice\n";
+cout<<"1.Two stroke engine  2.Four stroke Engine\n";
+cin>>s;
+cout<<"\nEnter the number of revolutions per minute or engine speed (rpm)\t";
+cin>>N;
+cout<<"\nEnter your choice\n";
+cout<<"1.Enter area of cross section of cylinder  2.Enter the diameter of cylinder\n";
+cin>>ch;
+
+if(ch==1)
+{
+cout<<"\nEnter the area of cross section of cylinder(meter square)\t";
+cin>>A;
+}
+else
+{
+cout<<"\nEnter the diameter of cylinder (meter)\t";
+cin>>dc;
+cout<<"\nEnter the number of cylinders\t";
+cin>>x;
+flag=1;
+}
+cout<<"\nEnter the length of stroke (meter)\t";
+cin>>L;
+cout<<"\nEnter the mechanical efficiency\t";
+cin>>mecheff;
+
+
+
+cout<<"\nEnter your choice\n";
+cout<<"1.Enter torque  2.Calculate torque\n";
+cin>>z;
+if(z==1)
+{
+cout<<"\nEnter the torque(kNm)\t";
+cin>>torque;
+}
+else
+{
+cout<<"\nEnter the net load acting on brake drum (kg)\t";
+cin>>wt;
+cout<<"\nEnter the radius of brake drum(meter)\t";
+cin>>rad;
+post=1;
+}
+}
+void calcspecial()
+{
+
+ if(post==1)
+ {
+ torque=(9.81/1000)*wt*rad;
+ }
+
+brakepower=(2*3.14*N*torque)/60;
+IP=(brakepower/mecheff)*100;
+if(flag==1)
+{
+A=dc*dc*3.14/4;
+}
+mep=(IP*60*s*1000)/(L*A*x*N*100000);
+}
+void putspecial()
+{
+cout<<"\nBrake Power\t"<<brakepower<<"kW";
+cout<<"\nIndicated power\t"<<IP<<"kW";
+cout<<"\nMean Effective Pressure\t"<<mep<<"bar";
+}
+
+float ret_N()
+
+{
+return N;
+}
+
+
+float ret_IP()
+{
+   return IP;
+}
+};
+ class brakepow :virtual public intpow
+{
+
+
+float T,BP,R,W,FP;
+int choice,sign;
+
+   public:
+
+
+     void getdata2()
+      {
+
+      sign=0;
+	cout<<"\nEnter your choice\n";
+	cout<<"\n\n1.Enter Torque\t2.Calculate Torque\t";
+	cin>>choice;
+
+	if(choice==1)
+	{
+	   cout<<"\nEnter the torque (kNm)\t";
+		  cin>>T;
+		  cout<<endl;
+		  sign=1;
+	}
+	 else
+	 { cout<<"Enter the net load acting on the brake drum(kg)\t";
+		  cin>>W;
+		  cout<<endl;
+
+		  cout<<"Enter the radius of the brake drum(meter)\t";
+		  cin>>R;
+		  cout<<endl;
+
+
+	}
+     }
+void calc2()
+{
+
+ if(sign==0)
+   {
+       T=9.81*W*R/1000;
+   }
+
+  BP= 2*3.14*ret_N()*T/60;
+  FP=ret_IP()-BP;
+  }
+ void putdata2()
+   {
+     cout<<"\nThe brake power is\t"<<BP<<"kW\n";
+     cout<<"\nThe frictional power is\t"<<FP<<"kW\n";
+   }
+ float ret_BP()
+ {
+   return BP;
+ }
+
+
+ };
+
+
+
+
+
+class efficiency:virtual public brakepow,virtual public intpow
+  {
+      float ME,BE,IE,mfr,sfc,sg,vfr,cv,bsfc,isfc;
+      int value;
+
+      public:
+
+	void getdata3()
+	{
+	   cout<<"\nEnter your choice\n";
+	   cout<<"\n\n1.Mass flow rate\t2.Specific fuel consumption\n3.Specific gravity\n";
+	   cin>>value;
+	   if(value==1)
+	   {
+	       cout<<"\nEnter the mass flow rate(kg per hour)\t";
+		      cin>>mfr;
+		      cout<<endl;
+
+	   }
+
+	   else if(value==2)
+	    { cout<<"Enter the specific fuel consumption\t(kg/kw-hr)\t";
+		      cin>>sfc;
+		      cout<<endl;
+	    }
+
+	     else
+	     { cout<<"Enter the specific gravity\t";
+		      cin>>sg;
+		      cout<<endl;
+		      cout<<"Enter the volume flow rate or diesel oil consumption(meter cube/min)\t";
+		      cin>>vfr;
+		      cout<<endl;
+
+
+	   }
+      cout<<"Enter the calorific value of the fuel(kJ/kg)\t";
+      cin>>cv;
+      cout<<endl;
+
+      }
+  void calc3()
+  {
+      if(value==2)
+	{
+	   mfr=sfc*ret_BP()/3600;
+	}
+      else if(value==3)
+	{
+	   mfr=sg*vfr/60;
+	}
+      else
+	{
+	   mfr=mfr/3600;
+	}
+   ME=(ret_BP()/ret_IP())*100;
+
+   IE=ret_IP()*100/(mfr*cv);
+   BE=ret_BP()*100/(mfr*cv);
+   bsfc=mfr/ret_BP();
+   isfc=mfr/ret_IP();
+
+   }
+
+void putdata3()
+{
+   cout<<"\nThe mechanical efficiency is\t"<<ME<<"%"<<endl;
+   cout<<"\nThe indicated thermal efficiency is\t"<<IE<<"%"<<endl;
+   cout<<"\nThe brake thermal efficiency is\t"<<BE<<"%"<<endl;
+   cout<<"\nThe brake specific fuel consumption is\t"<<bsfc<<"kg/kW-hr"<<endl;
+   cout<<"\nThe indicated specific fuel consumption is\t"<<isfc<<"kg/kW-hr"<<endl;
+
+}
+
+
+};
+
+
+
+
+void main()
+{
+   char yay;
+
+
+   clrscr();
+   cout<<"\t\t\tINTERNAL COMBUSTION ENGINES\n";
+   cout<<"\t\tProblems on Internal Combustion Engines\n";
+   do
+   {
+
+   intpow obj2;
+   efficiency obj1;
+
+   obj1.getdata1();
+   obj1.calc1();
+   obj1.putdata1();
+
+   obj1.getdata2();
+   obj1.calc2();
+   obj1.putdata2();
+
+   obj1.getdata3();
+   obj1.calc3();
+   obj1.putdata3();
+
+   obj2.getspecial();
+   obj2.calcspecial();
+   obj2.putspecial();
+   cout<<"\nEnter another problem?\t";
+   cin>>yay;
+   }while((yay=='y')||(yay=='Y'));
+getch();
+}
